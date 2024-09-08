@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Daum's SlideShow!
+Exec="/home/pi/flickr/slideshow.sh"
+Icon=/home/pi/flickr/_bin/slidshow.png
+Comment="Run Daum's SlideShow now";
+Terminal=false
+Type=Application

@@ -1,0 +1,7 @@
+# /etc/cron.d/raspi-monitor-scheduler
+
+# Enable the monitor every  morning at 8:00
+0 8 * * * root /home/pi/flickr/_bin/raspi-monitor on > /dev/null 2>&1
+
+# Disable the monitor every evening at 20:30
+30 20 * * * root /home/pi/flickr/_bin/raspi-monitor off > /dev/null 2>&1

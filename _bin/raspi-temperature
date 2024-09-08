@@ -1,0 +1,28 @@
+#!/bin/bash
+# For monitoring the CPU temp
+
+for id in core sdram_c sdram_i sdram_p ; do
+     echo -e "$id:\t$(vcgencmd measure_volts $id)" ;
+done
+
+/opt/vc/bin/vcgencmd measure_temp
+
+exit 0
+
+
+
+ '==================================================='
+date
+echo
+tm=`/opt/vc/bin/vcgencmd measure_temp`
+tc=`echo $tm| cut -d '=' -f2 | sed 's/..$//'`
+tf=$(echo "scale=1; (1.8*$tc)+32" | bc)
+echo -e "temp:\t $tf'F ($tc'C)"
+#echo -e "temp:\t $(/opt/vc/bin/vcgencmd measure_temp)" ;
+for src in arm core h264 isp v3d uart pwm emmc pixel vec hdmi dpi ; do echo -e "$src:\t $(/opt/vc/bin/vcgencmd measure_clock $src)" ; done
+for id in core ; do echo -e "$id:\t $(/opt/vc/bin/vcgencmd measure_volts $id)" ; done
+for id in sdram_c sdram_i sdram_p ; do echo -e "$id: $(/opt/vc/bin/vcgencmd measure_volts $id)" ; done
+for codec in H264 MPG2 WVC1 ; do echo -e "$codec:\t $(/opt/vc/bin/vcgencmd codec_enabled $codec)" ; done
+echo
+echo 'firmware version'
+/opt/vc/bin/vcgencmd version

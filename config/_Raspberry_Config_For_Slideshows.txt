@@ -1,0 +1,94 @@
+# Raspberry configuration for using as a slideshow:
+
+0. Copy all files to:
+/home/pi/flickr
+* Folder structure:
+flickr/
+	_bin
+	   logs
+	   py-slideshow
+	Frame
+* Check that all files are executable
+
+1. Config auto run at login:
+* edit file: 
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+@point-rpi
+@xset s 0 0
+@xset s noblank
+@xset s noexpose
+@xset dpms 0 0 0
+@/home/pi/flickr/slideshow.sh
+
+2. Disable screen server:
+* Check that in /boot/config.txt exist:
+@xset s 0 0
+@xset s noblank
+@xset s noexpose
+@xset dpms 0 0 0
+
+* Check that in /boot/cmdline.txt
+ exist:
+consoleblank=0
+
+3. Set HDMI resolution:
+* Uncomment lines in /boot/config.txt:
+hdmi_force_hotplug=1
+config_hdmi_boost=4
+hdmi_drive=2
+hdmi_group=2
+
+hdmi_mode=81
+
+* Other modes: 
+	mode 85 -> 1280x720 60Hz 720p
+	mode 81	-> 1366x768 60Hz
+
+4. Schedule screen off & screen on:
+* Create /etc/cron.d/raspi-screen-scheduler:
+# Enable the monitor every  morning at 8:00
+
+0 8 * * * root /home/pi/flickr/_bin/raspi-monitor on > /dev/null 2>&1
+
+
+# Disable the monitor every evening at 20:30
+
+30 20 * * * root /home/pi/flickr/_bin/raspi-monitor off > /dev/null 2>&1
+
+
+5. Config shutdown by button:
+* Add the following lines to the end of file /etc/rc.local (before 'exit 0')
+sudo python /home/pi/scripts/shutdown_pi.py
+
+* Add the folowing lines to end of file /etc/bash.bashrc
+alias ll='ls -al'
+
+alias cdd='cd /home/pi/flickr/_bin'
+alias syslog='tailf /var/log/syslog'
+alias logg='ls -tal /var/log/ | head'
+alias network-reset='sudo ifdown -a;sudo ifup -a'
+alias tv_on='/opt/vc/bin/tvservice --preferred;chvt 6;chvt 7'
+alias tv_off='/opt/vc/bin/tvservice --off'
+
+6. Create a deskop icon for running slideshow:
+[Desktop Entry]
+
+Name=Daum's SlideShow!
+
+Exec="/home/pi/flickr/slideshow.sh"
+
+Icon=/home/pi/flickr/_bin/slidshow.png
+
+Comment="Run Daum's SlideShow now";
+
+Terminal=false
+
+Type=Application
+
+7. Install bluetooth mouse & keyboard app:
+Google play -> premote
+
+8. For system monitoring, add this line to 'sudo crontab -e'
+*/15 * * * * /bin/bash /home/pi/flickr/_bin/system_health_monitor.sh

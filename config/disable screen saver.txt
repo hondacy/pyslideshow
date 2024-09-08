@@ -1,0 +1,14 @@
+in /boot/config.txt:
+@xset s 0 0
+@xset s noblank
+@xset s noexpose
+@xset dpms 0 0 0
+
+
+
+in /boot/cmdline.txt
+:
+consoleblank=0
+
+sudo apt-get install xscreensaver
+Lets control screen configuration from the GUI
